@@ -9,8 +9,26 @@ type RequestBody = {
   lead?: LeadRecord;
 };
 
+const preferredLeadKeys = [
+  "firstname",
+  "lastname",
+  "company",
+  "jobtitle",
+  "industry",
+  "website",
+  "company_summary"
+];
+
 function buildLeadText(lead: LeadRecord): string {
-  return Object.entries(lead)
+  const prioritizedEntries = preferredLeadKeys
+    .filter((key) => key in lead)
+    .map((key) => [key, lead[key]] as const);
+
+  const remainingEntries = Object.entries(lead).filter(
+    ([key]) => !preferredLeadKeys.includes(key)
+  );
+
+  return [...prioritizedEntries, ...remainingEntries]
     .filter(([, value]) => value !== undefined && value !== null && `${value}`.trim() !== "")
     .map(([key, value]) => `${key}: ${value}`)
     .join(", ");

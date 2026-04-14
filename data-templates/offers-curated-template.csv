@@ -1,0 +1,4 @@
+reference_id,offer_family,audience_role,industry_tags,problem_tags,company_type_tags,sentence_type,exact_sentence,supporting_notes,active
+OFF-PBI-001,power_bi_workspace_setup,operations_manager,"manufacturing|retail","reporting|visibility","sme|midmarket",offer_core,"We can set up your Power BI workspace, build your first reports and train your team in as little as two weeks.","Primary commercial offer sentence",true
+OFF-PBI-002,power_bi_workspace_setup,operations_manager,"manufacturing|retail","reporting|visibility","sme|midmarket",offer_delivery,"We can usually get the workspace, first reports and handover in place without a long implementation cycle.","Supporting delivery sentence",true
+OFF-PBI-003,power_bi_workspace_setup,operations_manager,"manufacturing|retail","reporting|visibility","sme|midmarket",cta,"If useful, I can outline what that setup would look like for your team.","CTA sentence",true

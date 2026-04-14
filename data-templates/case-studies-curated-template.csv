@@ -1,0 +1,4 @@
+reference_id,case_study_family,industry_tags,problem_tags,company_type_tags,sentence_type,exact_sentence,source_client_label,active
+CS-PBI-001,power_bi_delivery,"manufacturing","reporting|visibility","midmarket",proof_delivery,"We built a Power BI reporting suite that gave the leadership team a single view across sales, stock and operations.","Client A",true
+CS-PBI-002,power_bi_delivery,"manufacturing","reporting|visibility","midmarket",proof_outcome,"That reduced the manual reporting burden and made weekly decision-making faster.","Client A",true
+CS-PBI-003,power_bi_delivery,"manufacturing","reporting|visibility","midmarket",proof_context,"The reporting setup replaced spreadsheet-heavy reporting with a cleaner management view.","Client A",true

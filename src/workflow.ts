@@ -1,4 +1,4 @@
-import { fileSearchTool, Agent, type AgentInputItem, Runner, withTrace } from "@openai/agents";
+import { fileSearchTool, Agent, Runner, withTrace } from "@openai/agents";
 import { z } from "zod";
 
 const DeliverableSentenceSchema = z.object({
@@ -54,6 +54,29 @@ function cleanEnv(value: string | undefined, fallback?: string): string {
   throw new Error("Missing required environment variable.");
 }
 
+function buildSelectorPrompt(leadText: string): string {
+  return [
+    "Lead context:",
+    leadText,
+    "",
+    "Select only approved dataset rows that best match this lead."
+  ].join("\n");
+}
+
+function buildComposerPrompt(
+  leadText: string,
+  offer: z.infer<typeof OfferSelectionSchema>,
+  proofs: z.infer<typeof DaveOutputSchema>
+): string {
+  const payload = {
+    lead_context: leadText,
+    selected_offer: offer,
+    selected_proof_sentences: proofs.sentences
+  };
+
+  return JSON.stringify(payload, null, 2);
+}
+
 const deliverablesVectorStoreId = cleanEnv(
   process.env.OPENAI_DELIVERABLES_VECTOR_STORE_ID,
   "vs_69dcf75c5fe48191b238db51b0c16440"
@@ -67,41 +90,30 @@ const workflowId = cleanEnv(
   "wf_69cca6c89b848190b5681ecf9fa28c0e08f9ed130c5ffb75"
 );
 
-const fileSearch = fileSearchTool([deliverablesVectorStoreId]);
-const fileSearch1 = fileSearchTool([offersVectorStoreId]);
+const proofSearch = fileSearchTool([deliverablesVectorStoreId]);
+const offerSearch = fileSearchTool([offersVectorStoreId]);
 
 const dave = new Agent({
   name: "Dave",
-  instructions: `You are David, the deliverables proof selector for outbound email.
+  instructions: `You are David, the proof sentence curator for outbound email.
 
-You will receive lead details such as job title, industry, company size, company name, and sometimes a company description.
+You must search the case study / deliverables knowledge base for approved exact proof sentences.
 
-Your job is to search the DELIVERABLES vector store and DUMMYDELIVERABLES.json and return up to 2 relevant proof sentences that could support an outbound email.
+The dataset is sentence-first. Each record is already an approved reusable sentence block.
 
 Rules:
-1. Only use content explicitly present in the knowledge base.
-2. Do not invent facts, clients, sectors, outcomes, or deliverables.
-3. Do not merge details from different records into one sentence.
-4. Only make minimal edits for grammar, tense, pronouns, or email fit.
-5. Each sentence must map to exactly one source record.
-6. Cite the exact \`reference_id\` for every sentence.
-7. Prefer records matching the lead's industry, company type, stakeholder type, or likely business challenge.
-8. If there is no exact match, use the closest credible match and preserve the original meaning.
-9. Keep outputs concise and useful for a composer agent.
-10. Return at most 2 sentences.
+1. Return up to 2 rows only.
+2. Prefer records that best match the lead's industry, stakeholder, business problem, and company type.
+3. Use only exact sentences that exist in the knowledge base.
+4. source_sentence must be copied exactly from the chosen record.
+5. email_sentence must either equal source_sentence or contain only minimal polish for pronouns, tense, or grammar.
+6. Do not invent, merge, or expand claims.
+7. If no strong match exists, choose the closest credible sentence and lower fit implicitly by selecting conservative proof.
+8. Never paraphrase beyond minimal polish.
 
-Output format:
-{
-  "sentences": [
-    {
-      "reference_id": "DS-DELIV-001",
-      "source_sentence": "<exact sentence from the knowledge base>",
-      "email_sentence": "<same sentence or minimally edited version>"
-    }
-  ]
-}`,
+Return JSON only.`,
   model: "gpt-5-mini",
-  tools: [fileSearch],
+  tools: [proofSearch],
   outputType: DaveOutputSchema,
   modelSettings: {
     reasoning: {
@@ -114,37 +126,25 @@ Output format:
 
 const davina = new Agent({
   name: "Davina",
-  instructions: `You are an offer selection and positioning agent for outbound email.
+  instructions: `You are Davina, the offer sentence curator for outbound email.
 
-You will receive input parameters about a lead, such as Job Title, Industry, Company Size, Company Name, and sometimes a Company Description.
+You must search the offers knowledge base for a single approved commercial sentence that best fits the lead.
 
-Your job is to search the OFFERS vector store and DUMMYOFFERS.json and select the single most relevant offer for this lead.
+The dataset is sentence-first. Each record is already an approved reusable sentence block.
 
 Rules:
-1. You must only use content that is explicitly present in the knowledge base.
-2. Do not invent services, deliverables, sectors, outcomes, guarantees, or capabilities.
-3. Do not merge details from different records into one offer description.
-4. You may make only minimal edits for grammar, tense, pronouns, or email fit. Do not change the factual meaning.
-5. The selected offer must map to exactly one source record.
-6. Cite the exact \`reference_id\` of the source record used.
-7. Prefer offers that match the lead's industry, company type, stakeholder type, or likely business challenge.
-8. If there is no exact match, use the closest credible match from the knowledge base rather than returning nothing.
-9. If using a closest credible match, keep the original meaning and do not overstate similarity.
-10. Never cite a record unless the selected offer came from that exact record.
-11. Prefer commercially practical offers such as reporting, automation, CRM improvement, dashboards, workflow improvement, or data cleanup where relevant.
-12. Only choose one offer.
+1. Select exactly one primary offer row.
+2. Prefer sentence_type values such as offer_core or offer_delivery over CTA-only rows.
+3. Use only exact sentences that exist in the knowledge base.
+4. source_text must be copied exactly from the chosen record.
+5. email_summary must either equal source_text or contain only minimal polish for pronouns, tense, or grammar.
+6. Do not invent, merge, or expand claims.
+7. Keep offer_title concise and derived from the selected row's commercial meaning, not a new promise.
+8. reference_id must be the exact selected row ID.
 
-Output format:
-{
-  "selected_offer": {
-    "reference_id": "DS-OFFER-001",
-    "offer_title": "<title from the knowledge base>",
-    "source_text": "<exact text from the knowledge base>",
-    "email_summary": "<same text or minimally edited version for email use>"
-  }
-}`,
+Return JSON only.`,
   model: "gpt-5-mini",
-  tools: [fileSearch1],
+  tools: [offerSearch],
   outputType: DavinaOutputSchema,
   modelSettings: {
     reasoning: {
@@ -157,40 +157,29 @@ Output format:
 
 const davidoff = new Agent({
   name: "Davidoff",
-  instructions: `You are the final outbound email composer.
+  instructions: `You are the final outbound email stitcher.
 
 You will receive:
 1. lead context
-2. Davina's selected offer
-3. David's selected deliverable sentences
+2. one approved offer sentence
+3. up to two approved proof sentences
 
-Your job is to write one concise cold email using the selected offer as the main message and the selected deliverable sentence(s) as supporting proof.
+Your job is to assemble a concise cold email that is mostly made from those curated sentences.
 
 Rules:
-1. The offer is the main message.
-2. The deliverable sentence(s) are supporting proof only.
-3. Do not invent facts, outcomes, clients, sectors, metrics, or capabilities.
-4. Only use the offer and deliverable material provided in the inputs.
-5. Do not turn the message into a case study dump.
-6. Keep the email body between 80 and 140 words.
-7. Use at most 3 short paragraphs.
-8. Use one CTA only.
-9. Tone should be direct, calm, natural, and commercially sensible.
-10. If the inputs are weak, mismatched, or low-confidence, reflect that in \`needs_review\`.
-11. Preserve the factual meaning of any supporting proof used.
+1. Prefer preserving the approved offer and proof wording exactly.
+2. You may only do minimal polish: grammar fixes, pronoun changes, tense alignment, light connective wording, and paragraph shaping.
+3. Do not invent facts, outcomes, clients, sectors, metrics, capabilities, or promises.
+4. Do not materially paraphrase the offer or proof claims.
+5. Keep the email body between 80 and 140 words.
+6. Use at most 3 short paragraphs.
+7. Use one CTA only.
+8. If the selected sentences fit poorly together, set needs_review to true.
+9. selected_offer_summary must reflect the approved offer text actually used.
+10. selected_project_summary must reflect the proof sentence text actually used.
 
-Output format:
-{
-  "angle": "<short description of the email angle>",
-  "subject": "<email subject line>",
-  "email_body": "<final email body>",
-  "selected_offer_summary": "<summary of the chosen offer actually used>",
-  "selected_project_summary": "<summary of the chosen deliverable proof actually used>",
-  "mailbox_hint": "<optional mailbox/persona hint if useful>",
-  "confidence": 0.0,
-  "needs_review": false
-}`,
-  model: "gpt-5.4",
+Return JSON only.`,
+  model: "gpt-5-mini",
   outputType: DavidoffOutputSchema,
   modelSettings: {
     reasoning: {
@@ -202,11 +191,8 @@ Output format:
 });
 
 export const runWorkflow = async (workflow: WorkflowInput): Promise<WorkflowResult> => {
-  return withTrace("Dave", async () => {
-    const conversationHistory: AgentInputItem[] = [
-      { role: "user", content: [{ type: "input_text", text: workflow.input_as_text }] }
-    ];
-
+  return withTrace("CuratedEmailWorkflow", async () => {
+    const selectorPrompt = buildSelectorPrompt(workflow.input_as_text);
     const runner = new Runner({
       traceMetadata: {
         __trace_source__: "agent-builder",
@@ -214,31 +200,31 @@ export const runWorkflow = async (workflow: WorkflowInput): Promise<WorkflowResu
       }
     });
 
-    const daveResultTemp = await runner.run(dave, [...conversationHistory]);
-    conversationHistory.push(...daveResultTemp.newItems.map((item) => item.rawItem));
-
-    if (!daveResultTemp.finalOutput) {
+    const proofResult = await runner.run(dave, selectorPrompt);
+    if (!proofResult.finalOutput) {
       throw new Error("Dave result is undefined");
     }
 
-    const davinaResultTemp = await runner.run(davina, [...conversationHistory]);
-    conversationHistory.push(...davinaResultTemp.newItems.map((item) => item.rawItem));
-
-    if (!davinaResultTemp.finalOutput) {
+    const offerResult = await runner.run(davina, selectorPrompt);
+    if (!offerResult.finalOutput) {
       throw new Error("Davina result is undefined");
     }
 
-    const davidoffResultTemp = await runner.run(davidoff, [...conversationHistory]);
-    conversationHistory.push(...davidoffResultTemp.newItems.map((item) => item.rawItem));
+    const composerPrompt = buildComposerPrompt(
+      workflow.input_as_text,
+      offerResult.finalOutput.selected_offer,
+      proofResult.finalOutput
+    );
 
-    if (!davidoffResultTemp.finalOutput) {
+    const composerResult = await runner.run(davidoff, composerPrompt);
+    if (!composerResult.finalOutput) {
       throw new Error("Davidoff result is undefined");
     }
 
     return {
-      deliverables_agent_output: daveResultTemp.finalOutput,
-      offers_agent_output: davinaResultTemp.finalOutput,
-      composer_output: davidoffResultTemp.finalOutput
+      deliverables_agent_output: proofResult.finalOutput,
+      offers_agent_output: offerResult.finalOutput,
+      composer_output: composerResult.finalOutput
     };
   });
 };
