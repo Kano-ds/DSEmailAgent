@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/run-email-agent.ts": {
+      "runtime": "@vercel/node@5.3.24"
+    }
+  }
+}
