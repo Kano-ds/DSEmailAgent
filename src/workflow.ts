@@ -79,11 +79,11 @@ function buildComposerPrompt(
 
 const deliverablesVectorStoreId = cleanEnv(
   process.env.OPENAI_DELIVERABLES_VECTOR_STORE_ID,
-  "vs_69dcf75c5fe48191b238db51b0c16440"
+  "vs_69de40e162548191a860793bca6a43db"
 );
 const offersVectorStoreId = cleanEnv(
   process.env.OPENAI_PROJECTS_VECTOR_STORE_ID,
-  "vs_69dcf7796fe88191896d77ca486230e8"
+  "vs_69de40b8596c8191a1b12ffadca5b94a"
 );
 const workflowId = cleanEnv(
   process.env.OPENAI_WORKFLOW_ID,
