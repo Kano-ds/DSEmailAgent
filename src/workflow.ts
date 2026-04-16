@@ -59,7 +59,8 @@ function buildSelectorPrompt(leadText: string): string {
     "Lead context:",
     leadText,
     "",
-    "Select only approved dataset rows that best match this lead."
+    "Select only approved dataset rows that best match this lead.",
+    "Pay close attention to the actual business problem, industry, company type, and whether the lead sounds more like a reporting, automation, CRM, retail data, marketing data, or comment-analysis fit."
   ].join("\n");
 }
 
@@ -110,6 +111,9 @@ Rules:
 6. Do not invent, merge, or expand claims.
 7. If no strong match exists, choose the closest credible sentence and lower fit implicitly by selecting conservative proof.
 8. Never paraphrase beyond minimal polish.
+9. Prefer proof that matches the specific business problem first, then the industry.
+10. Prefer operationally believable proof over flashy but vague proof.
+11. Avoid selecting two sentences that say almost the same thing.
 
 Return JSON only.`,
   model: "gpt-5-mini",
@@ -141,6 +145,9 @@ Rules:
 6. Do not invent, merge, or expand claims.
 7. Keep offer_title concise and derived from the selected row's commercial meaning, not a new promise.
 8. reference_id must be the exact selected row ID.
+9. Match the offer to the concrete problem in the lead context, not just the industry.
+10. Prefer broader diagnostic or cleanup offers when the problem is messy or ambiguous.
+11. Prefer specific offers like Power BI, CRM rebuild, retail data reporting, marketing data reporting, automation, or comment analysis when the lead context clearly points there.
 
 Return JSON only.`,
   model: "gpt-5-mini",
@@ -177,6 +184,13 @@ Rules:
 8. If the selected sentences fit poorly together, set needs_review to true.
 9. selected_offer_summary must reflect the approved offer text actually used.
 10. selected_project_summary must reflect the proof sentence text actually used.
+11. Sound like a practical consultancy, not a generic sales email.
+12. Do not say "I saw" or claim you observed internal problems unless the lead context explicitly states them.
+13. If the lead context names a concrete problem, mirror it directly and simply.
+14. Keep the proof as supporting evidence, not the centre of the email.
+15. Prefer one sharp commercial idea over stacking multiple capabilities together.
+16. The CTA should be low-pressure and natural, for example offering to share how you would approach it or compare notes briefly.
+17. Avoid hype, avoid vague transformation language, and avoid sounding like a template.
 
 Return JSON only.`,
   model: "gpt-5-mini",
