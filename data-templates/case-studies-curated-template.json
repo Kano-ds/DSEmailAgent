@@ -1,0 +1,200 @@
+[
+  {
+    "reference_id": "CS-RET-001",
+    "case_study_family": "retail_reporting",
+    "industry_tags": "retail|wholesale",
+    "problem_tags": "sales_data|stock_data|reporting|visibility",
+    "company_type_tags": "midmarket",
+    "sentence_type": "proof_delivery",
+    "exact_sentence": "We built reporting that brought sales and stock data into one management view instead of being spread across separate spreadsheets and systems.",
+    "source_client_label": "Retail Client A",
+    "active": true
+  },
+  {
+    "reference_id": "CS-RET-002",
+    "case_study_family": "retail_reporting",
+    "industry_tags": "retail|wholesale",
+    "problem_tags": "sales_data|stock_data|reporting|visibility",
+    "company_type_tags": "midmarket",
+    "sentence_type": "proof_outcome",
+    "exact_sentence": "That made weekly trading conversations faster because the team was working from one version of the numbers.",
+    "source_client_label": "Retail Client A",
+    "active": true
+  },
+  {
+    "reference_id": "CS-RET-003",
+    "case_study_family": "retail_reporting",
+    "industry_tags": "retail|wholesale",
+    "problem_tags": "sales_data|stock_data|reporting|visibility",
+    "company_type_tags": "midmarket",
+    "sentence_type": "proof_context",
+    "exact_sentence": "The work replaced spreadsheet-heavy reporting with a cleaner view for commercial and operational teams.",
+    "source_client_label": "Retail Client A",
+    "active": true
+  },
+  {
+    "reference_id": "CS-PBI-001",
+    "case_study_family": "power_bi_delivery",
+    "industry_tags": "finance|professional_services|retail",
+    "problem_tags": "reporting|dashboards|manual_reporting|visibility",
+    "company_type_tags": "midmarket",
+    "sentence_type": "proof_delivery",
+    "exact_sentence": "We built a Power BI reporting suite that gave the leadership team a clearer view across operational and commercial performance.",
+    "source_client_label": "Client A",
+    "active": true
+  },
+  {
+    "reference_id": "CS-PBI-002",
+    "case_study_family": "power_bi_delivery",
+    "industry_tags": "finance|professional_services|retail",
+    "problem_tags": "reporting|dashboards|manual_reporting|visibility",
+    "company_type_tags": "midmarket",
+    "sentence_type": "proof_outcome",
+    "exact_sentence": "That reduced the manual reporting burden and made regular decision-making faster.",
+    "source_client_label": "Client A",
+    "active": true
+  },
+  {
+    "reference_id": "CS-PBI-003",
+    "case_study_family": "power_bi_delivery",
+    "industry_tags": "finance|professional_services|retail",
+    "problem_tags": "reporting|dashboards|manual_reporting|visibility",
+    "company_type_tags": "midmarket",
+    "sentence_type": "proof_context",
+    "exact_sentence": "The reporting setup replaced spreadsheet-heavy reporting with a cleaner management view.",
+    "source_client_label": "Client A",
+    "active": true
+  },
+  {
+    "reference_id": "CS-CRM-001",
+    "case_study_family": "crm_rebuild",
+    "industry_tags": "professional_services|finance|b2b_services",
+    "problem_tags": "crm|pipeline|data_quality|sales_process",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_delivery",
+    "exact_sentence": "We rebuilt the CRM structure so the pipeline, core fields and reporting worked properly together instead of being patched around old process.",
+    "source_client_label": "Client B",
+    "active": true
+  },
+  {
+    "reference_id": "CS-CRM-002",
+    "case_study_family": "crm_rebuild",
+    "industry_tags": "professional_services|finance|b2b_services",
+    "problem_tags": "crm|pipeline|data_quality|sales_process",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_outcome",
+    "exact_sentence": "That made the CRM easier for the team to keep up to date and more useful for management reporting.",
+    "source_client_label": "Client B",
+    "active": true
+  },
+  {
+    "reference_id": "CS-CRM-003",
+    "case_study_family": "crm_rebuild",
+    "industry_tags": "professional_services|finance|b2b_services",
+    "problem_tags": "crm|pipeline|data_quality|sales_process",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_context",
+    "exact_sentence": "The main gain was not just cleaner data, but a setup people could actually use without workarounds.",
+    "source_client_label": "Client B",
+    "active": true
+  },
+  {
+    "reference_id": "CS-AUTO-001",
+    "case_study_family": "internal_automation",
+    "industry_tags": "retail|finance|professional_services",
+    "problem_tags": "manual_processes|admin|handoffs|automation",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_delivery",
+    "exact_sentence": "We automated a set of internal handoffs that had previously relied on people chasing updates across inboxes and spreadsheets.",
+    "source_client_label": "Client C",
+    "active": true
+  },
+  {
+    "reference_id": "CS-AUTO-002",
+    "case_study_family": "internal_automation",
+    "industry_tags": "retail|finance|professional_services",
+    "problem_tags": "manual_processes|admin|handoffs|automation",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_outcome",
+    "exact_sentence": "That cut down avoidable admin and made the process easier to track from start to finish.",
+    "source_client_label": "Client C",
+    "active": true
+  },
+  {
+    "reference_id": "CS-AUTO-003",
+    "case_study_family": "internal_automation",
+    "industry_tags": "retail|finance|professional_services",
+    "problem_tags": "manual_processes|admin|handoffs|automation",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_context",
+    "exact_sentence": "The work focused on practical automation rather than a big platform project.",
+    "source_client_label": "Client C",
+    "active": true
+  },
+  {
+    "reference_id": "CS-MKT-001",
+    "case_study_family": "marketing_reporting",
+    "industry_tags": "retail|consumer|ecommerce",
+    "problem_tags": "marketing_data|channel_performance|reporting",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_delivery",
+    "exact_sentence": "We built a reporting layer that brought marketing performance into one place instead of being rebuilt manually every week.",
+    "source_client_label": "Client D",
+    "active": true
+  },
+  {
+    "reference_id": "CS-MKT-002",
+    "case_study_family": "marketing_reporting",
+    "industry_tags": "retail|consumer|ecommerce",
+    "problem_tags": "marketing_data|channel_performance|reporting",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_outcome",
+    "exact_sentence": "That gave the team a faster read on what was working without spending so much time assembling the numbers.",
+    "source_client_label": "Client D",
+    "active": true
+  },
+  {
+    "reference_id": "CS-MKT-003",
+    "case_study_family": "marketing_reporting",
+    "industry_tags": "retail|consumer|ecommerce",
+    "problem_tags": "marketing_data|channel_performance|reporting",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_context",
+    "exact_sentence": "The improvement came from cleaner structure and more usable reporting, not just more charts.",
+    "source_client_label": "Client D",
+    "active": true
+  },
+  {
+    "reference_id": "CS-TEXT-001",
+    "case_study_family": "comment_analysis",
+    "industry_tags": "retail|consumer|services",
+    "problem_tags": "comments|feedback|text_analysis|sentiment",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_delivery",
+    "exact_sentence": "We helped structure comment and feedback data so recurring issues and themes were easier to review at scale.",
+    "source_client_label": "Client E",
+    "active": true
+  },
+  {
+    "reference_id": "CS-TEXT-002",
+    "case_study_family": "comment_analysis",
+    "industry_tags": "retail|consumer|services",
+    "problem_tags": "comments|feedback|text_analysis|sentiment",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_outcome",
+    "exact_sentence": "That turned a mass of free-text feedback into something the team could use in operational decisions.",
+    "source_client_label": "Client E",
+    "active": true
+  },
+  {
+    "reference_id": "CS-TEXT-003",
+    "case_study_family": "comment_analysis",
+    "industry_tags": "retail|consumer|services",
+    "problem_tags": "comments|feedback|text_analysis|sentiment",
+    "company_type_tags": "sme|midmarket",
+    "sentence_type": "proof_context",
+    "exact_sentence": "The value was in making messy comment data more usable rather than dressing it up as a complicated AI project.",
+    "source_client_label": "Client E",
+    "active": true
+  }
+]
