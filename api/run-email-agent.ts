@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import "dotenv/config";
+import "../src/braintrust.js";
 import { runWorkflow } from "../src/workflow.js";
 
 type LeadRecord = Record<string, unknown>;
